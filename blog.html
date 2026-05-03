@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — Michelle Sumuweng</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --plum:       #2d004f;
+      --violet:     #6a1b9a;
+      --lavender:   #9b5fc7;
+      --lilac:      #d4b8ec;
+      --mist:       #f0e6ff;
+      --cream:      #fdf8ff;
+      --text-dark:  #1a0030;
+      --text-mid:   #5a3570;
+      --text-light: #9e7fb8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(222, 139, 255, 0.1);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--lilac);
+    }
+
+    .nav-brand {
+      font-family: 'Cormorant Garamond', serif; font-size: 3.2rem; font-weight: 600;
+      color: var(--plum); text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+
+    .nav-links a {
+      font-size: 1.35rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-mid); text-decoration: none; position: relative; transition: color 0.3s;
+    }
+
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
+      background: var(--violet); transform: scaleX(0); transition: transform 0.3s ease;
+    }
+
+    .nav-links a:hover { color: var(--violet); }
+    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+    .nav-links a.active { color: var(--violet); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 7rem 6rem 6rem;
+      background: linear-gradient(135deg, var(--mist) 0%, var(--cream) 60%);
+      border-bottom: 1px solid var(--lilac);
+      position: relative; overflow: hidden;
+    }
+
+    .page-header::before {
+      content: 'BLOG';
+      position: absolute; right: 3rem; top: 50%; transform: translateY(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(6rem, 15vw, 12rem);
+      font-weight: 300; color: rgba(212,184,236,0.25);
+      letter-spacing: 0.1em; pointer-events: none;
+    }
+
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 5vw, 4.5rem); font-weight: 300; color: var(--plum);
+    }
+    .page-title em { font-style: italic; color: var(--lavender); }
+    .page-sub { font-size: 1.25rem; color: var(--text-mid); margin-top: 0.8rem; }
+
+    /* ── MAIN CONTENT centered ── */
+    .main-content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 4rem 2rem 5rem;
+    }
+
+    main {
+      width: 100%;
+      max-width: 760px;
+    }
+
+    /* ── ARTICLE CARDS ── */
+    .article-card {
+      border: 1px solid var(--lilac);
+      background: #fff;
+      margin-bottom: 3rem;
+      overflow: hidden;
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.55s ease, transform 0.55s ease, box-shadow 0.3s;
+    }
+
+    .article-card.visible { opacity: 1; transform: translateY(0); }
+    .article-card:hover { box-shadow: 0 8px 32px rgba(106,27,154,0.1); }
+
+    .article-header {
+      background: linear-gradient(90deg, var(--mist), rgba(212,184,236,0.3));
+      padding: 1rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--lilac);
+    }
+
+    .article-cat {
+      font-size: 0.98rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--violet); font-weight: 600;
+    }
+
+    .article-source { font-size: 0.98rem; color: var(--text-light); }
+
+    .article-body { padding: 2rem 1.8rem; }
+
+    .article-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem; font-weight: 400; color: var(--plum);
+      line-height: 1.25; margin-bottom: 1rem;
+    }
+
+    .article-text {
+      font-size: 1.05rem; color: var(--text-mid); line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .article-list {
+      font-size: 1rem; color: var(--text-mid); line-height: 1.9;
+      padding-left: 1.4rem; margin-bottom: 1rem;
+    }
+
+    .article-list li { margin-bottom: 0.25rem; }
+
+    .article-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.9rem; font-weight: 500; letter-spacing: 0.04em;
+      color: var(--violet); text-decoration: none;
+      border-bottom: 1px solid var(--lilac);
+      padding-bottom: 1px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .article-link:hover { color: var(--plum); border-color: var(--plum); }
+    .article-link::after { content: ' →'; }
+
+    /* ── VIDEO CARD ── */
+    .video-card {
+      border: 1px solid var(--lilac); background: #fff;
+      overflow: hidden;
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.55s ease, transform 0.55s ease, box-shadow 0.3s;
+    }
+
+    .video-card.visible { opacity: 1; transform: translateY(0); }
+    .video-card:hover { box-shadow: 0 8px 32px rgba(106,27,154,0.1); }
+
+    .video-header {
+      background: var(--plum); padding: 1.2rem 1.8rem;
+    }
+
+    .video-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; color: var(--lilac); font-weight: 600;
+    }
+
+    .video-body {
+      padding: 2rem 1.8rem; text-align: center;
+    }
+
+    .video-body video {
+      width: 100%; max-width: 480px;
+      border: 1px solid var(--lilac);
+      margin-bottom: 1rem;
+    }
+
+    .video-yt-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.9rem; color: var(--violet);
+      text-decoration: none; border-bottom: 1px solid var(--lilac);
+      padding-bottom: 1px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .video-yt-link:hover { color: var(--plum); border-color: var(--plum); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--mist);
+      border-top: 1px solid var(--lilac);
+      padding: 1.4rem 4rem;
+      text-align: center;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-copy {
+      font-size: 0.78rem;
+      color: var(--text-light);
+    }
+
+    /* Link footer menyambung tanpa kotak */
+    .footer-links {
+      display: inline-flex;
+      gap: 0;
+      list-style: none;
+    }
+
+    .footer-links li::before {
+      content: '·';
+      color: var(--text-light);
+      margin: 0 6px;
+      font-size: 0.78rem;
+    }
+
+    .footer-links a {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--violet); }
+
+    @media (max-width: 640px) {
+      nav { padding: 1rem 1.5rem; flex-direction: column; gap: 1rem; }
+      .nav-links { gap: 1rem; }
+      .page-header { padding: 5rem 2rem 3rem; }
+      .main-content { padding: 2rem 1rem 3rem; }
+      footer { padding: 1.4rem 1.5rem; }
+      .article-body { padding: 1.4rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-brand">Personal Page</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="blog.html" class="active">Blog</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <h1 class="page-title">My <em>Blog</em></h1>
+    <p class="page-sub">Some Articles &amp; Video</p>
+  </header>
+
+  <!-- MAIN CONTENT (centered) -->
+  <div class="main-content">
+    <main>
+
+      <!-- Artikel 1: Musik -->
+      <article class="article-card reveal">
+        <div class="article-header">
+          <span class="article-cat">🎵 Musik</span>
+          <span class="article-source">Sumber: Alodokter.com</span>
+        </div>
+        <div class="article-body">
+          <h2 class="article-title">10 Manfaat Musik bagi Kesehatan Fisik dan Mental</h2>
+          <p class="article-text">
+            Musik bukan sekadar hiburan. Perpaduan irama dan lirik dari musik tertentu
+            bisa menenangkan pikiran dan tubuh secara keseluruhan. Musik secara tidak
+            langsung dapat memengaruhi pikiran, perasaan, dan perilaku seseorang.
+          </p>
+          <p class="article-text"><strong>Beberapa manfaat utama musik bagi kesehatan:</strong></p>
+          <ol class="article-list">
+            <li>Memengaruhi suasana hati (<em>mood</em>) dan digunakan sebagai terapi relaksasi</li>
+            <li>Menjaga tekanan darah tetap normal melalui pengaturan laju napas dan detak jantung</li>
+            <li>Membantu mengatasi gangguan tidur seperti insomnia</li>
+            <li>Mengatasi dan mengelola stres sehari-hari</li>
+            <li>Membantu pemulihan pasien stroke dalam menggerakkan anggota tubuh</li>
+          </ol>
+          <p class="article-text">
+            Selera musik setiap orang bisa berbeda-beda, sehingga manfaat musik yang
+            diperoleh pun perlu disesuaikan dengan jenis musik yang disukai.
+          </p>
+          <a class="article-link" href="https://www.alodokter.com/jangan-hanya-dinikmati-kenali-manfaat-musik-berikut-ini" target="_blank">
+            Baca artikel lengkap di Alodokter
+          </a>
+        </div>
+      </article>
+
+      <!-- Artikel 2: Teknik Informatika -->
+      <article class="article-card reveal" style="transition-delay:0.1s">
+        <div class="article-header">
+          <span class="article-cat">💻 Teknik Informatika</span>
+          <span class="article-source">Sumber: iti.ac.id</span>
+        </div>
+        <div class="article-body">
+          <h2 class="article-title">Teknik Informatika Belajar Apa? Dari Programming hingga Data Science</h2>
+          <p class="article-text">
+            Jurusan Teknik Informatika memberikan pemahaman mendalam mulai dari
+            dasar-dasar pemrograman hingga teknologi terkini seperti
+            <em>data science</em> dan kecerdasan buatan.
+          </p>
+          <p class="article-text"><strong>Beberapa mata kuliah penting di Teknik Informatika:</strong></p>
+          <ol class="article-list">
+            <li><strong>Pemrograman Web</strong> — mempelajari HTML, CSS, JavaScript untuk membangun website</li>
+            <li><strong>Jaringan Komputer</strong> — memahami cara kerja jaringan dan konfigurasinya</li>
+            <li><strong>Rekayasa Perangkat Lunak</strong> — metodologi pengembangan software (Agile, Waterfall)</li>
+            <li><strong>Pemrograman Mobile</strong> — membuat aplikasi iOS dan Android</li>
+            <li><strong>Kecerdasan Buatan</strong> — machine learning dan data science</li>
+          </ol>
+          <a class="article-link" href="https://iti.ac.id/teknik-informatika-belajar-apa/" target="_blank">
+            Baca artikel lengkap di ITI
+          </a>
+        </div>
+      </article>
+
+      <!-- Artikel 3: Psikologi -->
+      <article class="article-card reveal" style="transition-delay:0.2s">
+        <div class="article-header">
+          <span class="article-cat">🧠 Psikologi</span>
+          <span class="article-source">Sumber: ayosehat.kemkes.go.id</span>
+        </div>
+        <div class="article-body">
+          <h2 class="article-title">Pentingnya Kesehatan Mental bagi Remaja dan Cara Menghadapinya</h2>
+          <p class="article-text">
+            Masalah kesehatan mental di kalangan remaja semakin meningkat. Survei I-NAMHS 2022
+            menunjukkan sebanyak 15,5 juta atau sekitar 34,9% remaja mengalami masalah kesehatan mental.
+          </p>
+          <p class="article-text"><strong>Tanda-tanda masalah kesehatan mental pada remaja:</strong></p>
+          <ul class="article-list">
+            <li>Kesulitan mengelola emosi, mudah marah atau sedih berlebihan tanpa alasan jelas</li>
+            <li>Kehilangan minat terhadap hal-hal yang biasa dilakukan</li>
+            <li>Merasa cemas berlebihan saat berada di antara orang lain</li>
+            <li>Menarik diri dan menghindar dari keramaian</li>
+            <li>Merasa tidak berharga dan menyalahkan diri sendiri</li>
+          </ul>
+          <p class="article-text"><strong>Cara menjaga kesehatan mental remaja:</strong></p>
+          <ol class="article-list">
+            <li>Tunjukkan cinta, kasih sayang, dan perhatian dari orang tua</li>
+            <li>Tetap aktif secara fisik dan berolahraga rutin</li>
+            <li>Kembangkan kebiasaan makan sehat dan tidur yang cukup</li>
+            <li>Jangan ragu mencari bantuan psikolog atau konselor</li>
+            <li>Bangun hubungan yang kuat dengan keluarga dan teman</li>
+          </ol>
+          <a class="article-link" href="https://ayosehat.kemkes.go.id/pentingnya-kesehatan-mental-bagi-remaja" target="_blank">
+            Baca artikel lengkap di Kemenkes
+          </a>
+        </div>
+      </article>
+
+      <!-- VIDEO -->
+      <div class="video-card reveal" style="transition-delay:0.3s">
+        <div class="video-header">
+          <h3 class="video-title">🎬 Video: Pretty Sunset</h3>
+        </div>
+        <div class="video-body">
+          <video controls>
+            <source src="Sunset.mp4" type="video/mp4">
+            <source src="Sunset.ogg" type="video/ogg">
+            Your browser does not support HTML5 video.
+          </video>
+          <br>
+          <a class="video-yt-link" href="https://www.youtube.com/watch?v=pBVYN9CAlQI" target="_blank">
+            📺 Tonton di YouTube
+          </a>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-copy">&copy; 2026 Michelle Sumuweng &mdash; Dibuat dengan HTML5, CSS3 &amp; JavaScript</span>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll Reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

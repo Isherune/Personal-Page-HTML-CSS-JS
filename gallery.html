@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — Michelle Sumuweng</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --plum:       #2d004f;
+      --violet:     #6a1b9a;
+      --lavender:   #9b5fc7;
+      --lilac:      #d4b8ec;
+      --mist:       #f0e6ff;
+      --cream:      #fdf8ff;
+      --text-dark:  #1a0030;
+      --text-mid:   #5a3570;
+      --text-light: #9e7fb8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+     nav {
+
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(222, 139, 255, 0.1);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--lilac);
+    }
+
+    .nav-brand {
+      font-family: 'Cormorant Garamond', serif; font-size: 3.2rem; font-weight: 600;
+      color: var(--plum); text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+
+    .nav-links a {
+      font-size: 1.35rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-mid); text-decoration: none; position: relative; transition: color 0.3s;
+    }
+
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
+      background: var(--violet); transform: scaleX(0); transition: transform 0.3s ease;
+    }
+
+    .nav-links a:hover { color: var(--violet); }
+    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+    .nav-links a.active { color: var(--violet); }
+
+    /* ── PAGE HEADER ── */
+  .page-header {
+      padding: 7rem 6rem 6rem;
+      background: linear-gradient(135deg, var(--mist) 0%, var(--cream) 60%);
+      border-bottom: 1px solid var(--lilac);
+      position: relative; overflow: hidden;
+    }
+
+    .page-header::before {
+      content: 'GALLERY';
+      position: absolute; right: 3rem; top: 50%; transform: translateY(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(6rem, 15vw, 12rem);
+      font-weight: 300; color: rgba(212,184,236,0.25);
+      letter-spacing: 0.1em; pointer-events: none;
+    }
+
+
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4.5rem, 5vw, 4rem);
+      font-weight: 300; color: var(--plum);
+    }
+
+    .page-title em { font-style: italic; color: var(--lavender); }
+
+    .page-sub {
+      font-size: 1.25rem; color: var(--text-mid);
+      margin-top: 0.8rem;
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      padding: 2rem 4rem;
+      display: flex; gap: 1rem; align-items: center;
+      border-bottom: 1px solid var(--lilac);
+    }
+
+    .filter-label {
+      font-size: 1.00rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-light);
+      margin-right: 0.5rem;
+    }
+
+    .filter-btn {
+      padding: 0.45rem 1.2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.90rem; letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1px solid var(--lilac);
+      background: transparent;
+      color: var(--text-mid);
+      cursor: pointer; transition: all 0.25s;
+      border-radius: 1px;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--violet);
+      border-color: var(--violet);
+      color: #fff;
+    }
+
+    /* ── GALLERY GRID ── */
+    .gallery-section { padding: 3rem 4rem 6rem; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .gallery-item {
+      position: relative; overflow: hidden;
+      aspect-ratio: 1 / 1;
+      background: var(--mist);
+      border: 1px solid var(--lilac);
+      cursor: pointer;
+    }
+
+    /* Tall items in column 1 of rows */
+    .gallery-item.tall { grid-row: span 2; aspect-ratio: unset; }
+
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+      display: block;
+    }
+
+    .gallery-item:hover img { transform: scale(1.06); }
+
+    /* Overlay */
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(45,0,79,0.7) 0%, transparent 50%);
+      opacity: 0; transition: opacity 0.4s;
+      display: flex; align-items: flex-end; padding: 1.2rem;
+    }
+
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+    .overlay-text {
+      font-size: 0.78rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--lilac);
+    }
+
+    /* placeholder when no image */
+    .gallery-item.placeholder {
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .gallery-item.placeholder::after {
+      content: attr(data-label);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem; font-style: italic;
+      color: var(--text-light);
+    }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(20,0,40,0.94);
+      display: none; align-items: center; justify-content: center;
+      padding: 2rem;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox-img {
+      max-width: 90vw; max-height: 85vh;
+      object-fit: contain;
+      border: 1px solid rgba(212,184,236,0.3);
+    }
+
+    .lightbox-close {
+      position: absolute; top: 1.5rem; right: 2rem;
+      font-size: 2rem; color: var(--lilac);
+      cursor: pointer; background: none; border: none;
+      transition: color 0.2s;
+    }
+
+    .lightbox-close:hover { color: #fff; }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      background: none; border: 1px solid rgba(212,184,236,0.3);
+      color: var(--lilac); font-size: 1.5rem;
+      width: 48px; height: 48px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .lightbox-nav:hover { background: rgba(212,184,236,0.1); color: #fff; }
+    .lightbox-prev { left: 1.5rem; }
+    .lightbox-next { right: 1.5rem; }
+
+    /* ── FOOTER ── */
+    /* ── FOOTER ── */
+    footer {
+      background: var(--mist);
+      border-top: 1px solid var(--lilac);
+      padding: 1.4rem 4rem;
+      text-align: center;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-copy {
+      font-size: 0.78rem;
+      color: var(--text-light);
+    }
+
+    /* Link footer menyambung tanpa kotak */
+    .footer-links {
+      display: inline-flex;
+      gap: 0;
+      list-style: none;
+    }
+
+    .footer-links li::before {
+      content: '·';
+      color: var(--text-light);
+      margin: 0 6px;
+      font-size: 0.78rem;
+    }
+
+    .footer-links a {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--violet); }
+
+    @media (max-width: 640px) {
+      nav { padding: 1rem 1.5rem; flex-direction: column; gap: 1rem; }
+      .nav-links { gap: 1rem; }
+      .page-header { padding: 5rem 2rem 3rem; }
+      .main-content { padding: 2rem 1rem 3rem; }
+      footer { padding: 1.4rem 1.5rem; }
+      .article-body { padding: 1.4rem 1.2rem; }
+    }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      .page-header { padding: 7rem 1.5rem 3rem; }
+      .filter-bar { padding: 1.5rem; flex-wrap: wrap; }
+      .gallery-section { padding: 2rem 1rem 4rem; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .gallery-item.tall { grid-row: span 1; aspect-ratio: 1/1; }
+      footer { flex-direction: column; gap: 1rem; padding: 1.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-brand">Personal Page</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="gallery.html" class="active">Gallery</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <h1 class="page-title">My <em>Gallery</em></h1>
+    <p class="page-sub">Some of my favourite moments captured &lt;3</p>
+  </header>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="solo">Solo</button>
+    <button class="filter-btn" data-filter="us">Together</button>
+  </div>
+
+  <!-- GALLERY -->
+  <section class="gallery-section">
+    <div class="gallery-grid" id="gallery-grid">
+
+      <div class="gallery-item reveal" data-cat="solo" data-index="0">
+        <img src="mypic5.jpeg" alt="Photo 1" loading="lazy">
+        <div class="gallery-overlay"><span class="overlay-text">Solo</span></div>
+      </div>
+
+      <div class="gallery-item reveal" data-cat="solo" data-index="1" style="transition-delay:0.05s">
+        <img src="mypic2.jpeg" alt="Photo 2" loading="lazy">
+        <div class="gallery-overlay"><span class="overlay-text">Solo</span></div>
+      </div>
+
+      <div class="gallery-item reveal" data-cat="us" data-index="2" style="transition-delay:0.1s">
+        <img src="us2.jpeg" alt="Photo 3" loading="lazy">
+        <div class="gallery-overlay"><span class="overlay-text">Together</span></div>
+      </div>
+
+      <div class="gallery-item reveal" data-cat="us" data-index="3" style="transition-delay:0.15s">
+        <img src="us7.jpg" alt="Photo 4" loading="lazy">
+        <div class="gallery-overlay"><span class="overlay-text">Together</span></div>
+      </div>
+
+      <div class="gallery-item reveal" data-cat="us" data-index="4" style="transition-delay:0.2s">
+        <img src="us4.jpeg" alt="Photo 5" loading="lazy">
+        <div class="gallery-overlay"><span class="overlay-text">Together</span></div>
+      </div>
+
+      <div class="gallery-item reveal" data-cat="solo" data-index="5" style="transition-delay:0.25s">
+        <img src="mypic4.jpeg" alt="Photo 6" loading="lazy">
+        <div class="gallery-overlay"><span class="overlay-text">Solo</span></div>
+      </div>
+
+      <div class="gallery-item reveal" data-cat="us" data-index="6" style="transition-delay:0.3s">
+        <img src="us3.jpeg" alt="Photo 7" loading="lazy">
+        <div class="gallery-overlay"><span class="overlay-text">Together</span></div>
+      </div>
+
+      <div class="gallery-item reveal" data-cat="solo" data-index="7" style="transition-delay:0.35s">
+        <img src="mypic.jpeg" alt="Photo 8" loading="lazy">
+        <div class="gallery-overlay"><span class="overlay-text">Solo</span></div>
+      </div>
+
+      <div class="gallery-item reveal" data-cat="us" data-index="8" style="transition-delay:0.4s">
+        <img src="us5.jpeg" alt="Photo 9" loading="lazy">
+        <div class="gallery-overlay"><span class="overlay-text">Together</span></div>
+      </div>
+
+      <div class="gallery-item reveal" data-cat="us" data-index="9" style="transition-delay:0.45s">
+        <img src="us.jpeg" alt="Photo 10" loading="lazy">
+        <div class="gallery-overlay"><span class="overlay-text">Together</span></div>
+      </div>
+
+      <div class="gallery-item reveal" data-cat="solo" data-index="10" style="transition-delay:0.5s">
+        <img src="mypic3.jpeg" alt="Photo 11" loading="lazy">
+        <div class="gallery-overlay"><span class="overlay-text">Solo</span></div>
+      </div>
+
+      <div class="gallery-item reveal" data-cat="us" data-index="11" style="transition-delay:0.55s">
+        <img src="us6.jpeg" alt="Photo 12" loading="lazy">
+        <div class="gallery-overlay"><span class="overlay-text">Together</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lb-close">&times;</button>
+    <button class="lightbox-nav lightbox-prev" id="lb-prev">&#8592;</button>
+    <img class="lightbox-img" id="lb-img" src="" alt="">
+    <button class="lightbox-nav lightbox-next" id="lb-next">&#8594;</button>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-copy">&copy; 2026 Michelle Sumuweng &mdash; Dibuat dengan HTML5, CSS3 &amp; JavaScript</span>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+  
+  <script>
+    // ── Scroll Reveal ──
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ── Filter ──
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const items = document.querySelectorAll('.gallery-item');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+
+        items.forEach(item => {
+          if (filter === 'all' || item.dataset.cat === filter) {
+            item.style.display = '';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // ── Lightbox ──
+    const lightbox = document.getElementById('lightbox');
+    const lbImg    = document.getElementById('lb-img');
+    const lbClose  = document.getElementById('lb-close');
+    const lbPrev   = document.getElementById('lb-prev');
+    const lbNext   = document.getElementById('lb-next');
+
+    let currentIndex = 0;
+    const visibleItems = () => [...items].filter(i => i.style.display !== 'none');
+
+    function openLightbox(index) {
+      const vis = visibleItems();
+      currentIndex = index;
+      const img = vis[currentIndex].querySelector('img');
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    items.forEach((item, i) => {
+      item.addEventListener('click', () => {
+        const vis = visibleItems();
+        const visIndex = vis.indexOf(item);
+        openLightbox(visIndex);
+      });
+    });
+
+    lbClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+
+    lbPrev.addEventListener('click', () => {
+      const vis = visibleItems();
+      currentIndex = (currentIndex - 1 + vis.length) % vis.length;
+      lbImg.src = vis[currentIndex].querySelector('img').src;
+    });
+
+    lbNext.addEventListener('click', () => {
+      const vis = visibleItems();
+      currentIndex = (currentIndex + 1) % vis.length;
+      lbImg.src = vis[currentIndex].querySelector('img').src;
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') lbPrev.click();
+      if (e.key === 'ArrowRight') lbNext.click();
+    });
+  </script>
+
+</body>
+</html>
